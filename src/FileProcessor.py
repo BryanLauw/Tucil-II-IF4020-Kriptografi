@@ -45,9 +45,9 @@ def read_input(path: str, cover: bool, key: str | None = None):
             
             temp.write(bstr(value) + '\n')
 
-def write_stego(fileName: str):
+def write_stega(fileName: str):
     """
-    Membuat file .mp3 hasil steganografi yang bit-bitnya diambil dari file stego.txt
+    Membuat file .mp3 hasil steganografi yang bit-bitnya diambil dari file stega.txt
     
     Args:
         fileName (str): File output steganografi (wajib mp3)
@@ -58,8 +58,8 @@ def write_stego(fileName: str):
         raise Exception("File harus berekstensi mp3!")
     
     # with open('cover.txt', 'r') as f, open(fileName, 'wb') as out:
-    with open('stego.txt', 'r') as f, open(fileName, 'wb') as out:
-        # f.readline() # skipping extension tergantung di stego.txt nanti ada ekstensi/tidak
+    with open('stega.txt', 'r') as f, open(fileName, 'wb') as out:
+        f.readline() # skipping extension tergantung di stego.txt nanti ada ekstensi/tidak
         
         while True:
             byteString = f.readline().strip()
@@ -70,7 +70,7 @@ def write_stego(fileName: str):
 
 def read_write_secret(fileName: str, key: str | None = None):
     """
-    Rekronsturksi file rahasia dari sisip.txt
+    Rekronsturksi file rahasia dari extracted.txt
     
     Args:
         fileName (str): File output
@@ -84,7 +84,7 @@ def read_write_secret(fileName: str, key: str | None = None):
         key = key.encode("utf=8")
         key_len = len(key)
         
-    with open('sisip.txt', 'r') as f, open(fileName, 'wb') as out:
+    with open('extracted.txt', 'r') as f, open(fileName, 'wb') as out:
         f.readline() # Skip extension
         
         while True:
@@ -103,13 +103,16 @@ def read_write_secret(fileName: str, key: str | None = None):
 
 # Contoh penggunaan
 if __name__ == "__main__":
-    secretFile = input("Masukkan nama file yang disembunyikan: ")
-    secretKey = input("Masukkan kunci: ")
+    # secretFile = input("Masukkan nama file yang disembunyikan: ")
+    # secretKey = input("Masukkan kunci: ")
     
-    read_input(secretFile, False, secretKey)
+    # read_input(secretFile, False, secretKey)
     
-    output1 = input("Masukkan nama file tanpa dekripsi (ekstensi sama dengan file awal): ")
-    read_write_secret(output1)
+    # output1 = input("Masukkan nama file tanpa dekripsi (ekstensi sama dengan file awal): ")
+    # read_write_secret(output1)
     
-    output2 = input("Masukkan nama file dengan dekripsi (ekstensi sama dengan file awal): ")
-    read_write_secret(output2, secretKey)
+    output2 = input("Masukkan nama file tanpa dekripsi (ekstensi sama dengan file awal): ")
+    write_stega(output2)
+    
+    # output2 = input("Masukkan nama file dengan dekripsi (ekstensi sama dengan file awal): ")
+    # read_write_secret(output2, secretKey)
