@@ -45,6 +45,30 @@ def read_input(path: str, cover: bool, key: str | None = None):
             
             temp.write(bstr(value) + '\n')
 
+def read_input_stega(path: str):
+    """
+    Membaca file dan menyimpan dalam representasi bit-bit di file txt
+    
+    Args:
+        path (str): Path file yang dibaca (wajib mp3 untuk cover True)
+    Output:
+        stega.txt
+    """
+    if not path.endswith('.mp3'):
+        raise Exception("File harus berekstensi mp3!")
+    
+    with open(path, 'rb') as f, open('stega.txt', 'w') as temp:
+        temp.write(pathlib.Path(path).suffix + '\n')
+        
+        while True:
+            byte = f.read(1)
+            if not byte:
+                break
+            
+            value = struct.unpack('B', byte)[0]
+            
+            temp.write(bstr(value) + '\n')
+
 def write_stega(fileName: str):
     """
     Membuat file .mp3 hasil steganografi yang bit-bitnya diambil dari file stega.txt

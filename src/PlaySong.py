@@ -11,4 +11,4 @@ def play_song(file_path: str):
     except Exception as e:
         print(f"Error playing sound: {e}")
 
-play_song("sound/test.mp3")
+# play_song("sound/test.mp3")
