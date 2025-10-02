@@ -107,22 +107,25 @@ def read_write_secret(fileName: str, key: str | None = None):
     if key:
         key = key.encode("utf=8")
         key_len = len(key)
+    fileName = fileName.split('.')[0]
         
     with open('extracted.txt', 'r') as f, open(fileName, 'wb') as out:
-        f.readline() # Skip extension
+        ext = f.readline().strip() # Read and add extension
+        fileName += ext
         
-        while True:
-            byteString = f.readline().strip()
-            if not byteString: break
-            
-            value = int(byteString, 2)
-            if key:
-                current_key = key[key_idx % key_len]
-                value = decrypt_vigenere(value, current_key)
-                key_idx += 1
+        with open(fileName, 'wb') as out:    
+            while True:
+                byteString = f.readline().strip()
+                if not byteString: break
+                
+                value = int(byteString, 2)
+                if key:
+                    current_key = key[key_idx % key_len]
+                    value = decrypt_vigenere(value, current_key)
+                    key_idx += 1
 
-            byteResult = bytes([value])
-            out.write(byteResult)
+                byteResult = bytes([value])
+                out.write(byteResult)
 
 
 # Contoh penggunaan
@@ -135,8 +138,8 @@ if __name__ == "__main__":
     # output1 = input("Masukkan nama file tanpa dekripsi (ekstensi sama dengan file awal): ")
     # read_write_secret(output1)
     
-    output2 = input("Masukkan nama file tanpa dekripsi (ekstensi sama dengan file awal): ")
-    write_stega(output2)
+    # output2 = input("Masukkan nama file tanpa dekripsi (ekstensi sama dengan file awal): ")
+    # write_stega(output2)
     
     # output2 = input("Masukkan nama file dengan dekripsi (ekstensi sama dengan file awal): ")
     # read_write_secret(output2, secretKey)
