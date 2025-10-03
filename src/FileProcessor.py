@@ -109,7 +109,7 @@ def read_write_secret(fileName: str, key: str | None = None):
         key_len = len(key)
     fileName = fileName.split('.')[0]
         
-    with open('extracted.txt', 'r') as f, open(fileName, 'wb') as out:
+    with open('extracted.txt', 'r') as f:
         ext = f.readline().strip() # Read and add extension
         fileName += ext
         
@@ -129,7 +129,7 @@ def read_write_secret(fileName: str, key: str | None = None):
 
 
 # Contoh penggunaan
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # secretFile = input("Masukkan nama file yang disembunyikan: ")
     # secretKey = input("Masukkan kunci: ")
     
