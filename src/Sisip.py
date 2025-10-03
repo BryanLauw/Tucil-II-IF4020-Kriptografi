@@ -148,7 +148,7 @@ def find_audio_start(cover_bytes: list) -> int:
         for shift in range(8):
             candidate = combined[shift:shift + 11]
             if candidate == sync_word:
-                print("audio_start:", i)
+                print()
                 return i + 4
     # Check last byte alone (if file is very short)
     if n > 0 and cover_bytes[-1].startswith(sync_word):
@@ -176,7 +176,6 @@ def sisip(random_seed: str | None = None, n_lsb: int = 1):
 
     # --- Find audio sample start ---
     audio_start_idx = find_audio_start(cover_data)
-    print(audio_start_idx)
     cover_bytes = [list(b) for b in cover_data]
     usable_cover_bytes = cover_bytes[audio_start_idx:]
     total_usable_bytes = len(usable_cover_bytes)
@@ -258,7 +257,6 @@ def ekstrak(random_seed: str | None = None):
     cover_bytes = [line if len(line) >= 8 else line.zfill(8) for line in stego_data_lines]
 
     audio_start_idx = find_audio_start(cover_bytes)
-    print(audio_start_idx)
     usable_cover_bytes = [list(b) for b in cover_bytes[audio_start_idx:]]  # FIX
     total_usable_bytes = len(usable_cover_bytes)
 
