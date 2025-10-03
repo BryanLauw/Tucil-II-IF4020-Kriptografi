@@ -17,19 +17,29 @@ def sisip_pesan():
     output_name = os.path.join("output", output_name)
     
     key = input("Masukkan kunci enkripsi (tekan enter untuk tanpa kunci): ")
-    n_lsb = int(input("Masukkan jumlah LSB yang digunakan (1-4): "))
+    
+    loop = True
+    while loop:
+        n_lsb = int(input("Masukkan jumlah LSB yang digunakan (1, 2, 4): "))
+        if n_lsb in [1, 2, 4]:
+            if n_lsb == 4:
+                n_lsb = 3
+            loop = False
+        else:
+            print("Jumlah LSB harus 1, 2, atau 4. Silakan coba lagi.")
+            
     seed = input("Masukkan seed pembangkit acak (tekan enter untuk tanpa seed): ")
     
-    try:
-        read_input(cover_name, cover=True)
-        read_input(secret_name, cover=False, key=key if key else None)
-        sisip(False, n_lsb) # ubah setelah seed selesai
-        write_stega(output_name)
-        print(f"Pesan berhasil disisipkan ke dalam {output_name}")
-        
-        play_song(output_name)
-    except Exception as e:
-        print(f"Terjadi kesalahan: {e}")
+    # try:
+    read_input(cover_name, cover=True)
+    read_input(secret_name, cover=False, key=key if key else None)
+    sisip(False, n_lsb) # ubah setelah seed selesai
+    write_stega(output_name)
+    print(f"Pesan berhasil disisipkan ke dalam {output_name}")
+    
+    play_song(output_name)
+    # except Exception as e:
+    #     print(f"Terjadi kesalahan: {e}")
 
 def ekstrak_pesan():
     print("\n=== Ekstraksi Pesan Rahasia dari File Audio ===\n")
@@ -40,7 +50,8 @@ def ekstrak_pesan():
     output_name = os.path.join("ekstraksi", output_name)
     
     key = input("Masukkan kunci dekripsi (tekan enter untuk tanpa kunci): ")
-    
+    seed = input("Masukkan seed pembangkit acak (tekan enter untuk tanpa seed): ")
+
     try:
         read_input_stega(stego_name)
         ekstrak()
