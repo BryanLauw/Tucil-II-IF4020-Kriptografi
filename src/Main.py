@@ -30,21 +30,24 @@ def sisip_pesan():
             
     seed = input("Masukkan seed pembangkit acak (tekan enter untuk tanpa seed): ")
     
-    # try:
-    read_input(cover_name, cover=True)
-    read_input(secret_name, cover=False, key=key if key else None)
-    sisip(False, n_lsb) # ubah setelah seed selesai
-    write_stega(output_name)
-    print(f"Pesan berhasil disisipkan ke dalam {output_name}")
+    try:
+        read_input(cover_name, cover=True)
+        read_input(secret_name, cover=False, key=key if key else None)
+        sisip(seed, n_lsb)
+        write_stega(output_name)
+        print(f"Pesan berhasil disisipkan ke dalam {output_name}")
+        os.remove('cover.txt')
+        os.remove('sisip.txt')
+        os.remove('stega.txt')
     
-    play_song(output_name)
-    # except Exception as e:
-    #     print(f"Terjadi kesalahan: {e}")
+        play_song(output_name)
+    except Exception as e:
+        print(f"Terjadi kesalahan: {e}")
 
 def ekstrak_pesan():
     print("\n=== Ekstraksi Pesan Rahasia dari File Audio ===\n")
     stego_name = input("Masukkan nama file audio (mp3): ")
-    stego_name = os.path.join("stego-audio", stego_name)
+    stego_name = os.path.join("output", stego_name)
     
     output_name = input("Masukkan nama file output ekstraksi pesan: ")
     output_name = os.path.join("ekstraksi", output_name)
@@ -54,9 +57,11 @@ def ekstrak_pesan():
 
     try:
         read_input_stega(stego_name)
-        ekstrak()
+        ekstrak(seed)
         read_write_secret(output_name, key if key else None)
         print(f"Pesan berhasil diekstrak ke dalam {output_name}")
+        os.remove('stega.txt')
+        os.remove('extracted.txt')
         
     except Exception as e:
         print(f"Terjadi kesalahan: {e}")

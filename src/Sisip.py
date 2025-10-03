@@ -1,6 +1,9 @@
 import os
 import hashlib
+import math
 from typing import List
+
+from Randomizer import generate_random
 
 # ---------- Helpers ----------
 def bits_from_lines(lines: List[str]) -> str:
@@ -14,6 +17,107 @@ def int_to_bits(value: int, width: int) -> str:
 
 def bits_to_int(b: str) -> int:
     return int(b, 2) if b else 0
+
+# def find_max_start(nLSB: int, headersList: List[int]) -> int:
+def find_max_start_sisip(nLSB: int, firstHeader: int, stego_metadata: int) -> int:
+    """
+    Mencari lokasi index start maksimal yang dapat digunakan untuk menyisipkan file
+    
+    Args: 
+        nLSB (int): jumlah LSB yang digunakan
+        firstHeader (int): index pertama setelah header
+        stego_metadata (int): panjang metadata stego file
+        
+    Output:
+        selisih antara byte yang tersedia dengan byte yang dibutuhkan, jika negatif berarti tidak cukup
+    """
+    with open(r"cover.txt", 'r') as fc, open(r"sisip.txt", 'r') as fs:
+        coverBytes = len(fc.readlines()) - 1 # -1 for extension line
+        sisipBits = (len(fs.readlines()) - 1) * 8 # -1 for extension line
+        
+    bytesAmountNeeded = math.ceil(sisipBits / nLSB)
+    availableBytes = coverBytes - (firstHeader + stego_metadata)
+    # availableBytes = coverBytes - (4 * len(headersList) + headersList[0] + 72) # kalau pakai teknik lompat header
+    
+    return availableBytes - bytesAmountNeeded if (availableBytes >= bytesAmountNeeded) else -1
+
+def find_max_start_ekstrak(nLSB: int, firstHeader: int, stego_metadata: int, output_size: int) -> int:
+    """
+    Mencari lokasi index start maksimal yang dapat digunakan untuk menyisipkan file
+    
+    Args: 
+        nLSB (int): jumlah LSB yang digunakan
+        firstHeader (int): index pertama setelah header
+        stego_metadata (int): panjang metadata stego file
+        output_size (int): panjang file yang akan diekstrak dalam bit
+        
+    Output:
+        selisih antara byte yang tersedia dengan byte yang dibutuhkan, jika negatif berarti tidak cukup
+    """
+    with open(r"stega.txt", 'r') as fr:
+        coverBytes = len(fr.readlines()) - 1 # -1 for extension line
+    bytesAmountNeeded = math.ceil(output_size / nLSB)
+    availableBytes = coverBytes - (firstHeader + stego_metadata)
+    
+    return availableBytes - bytesAmountNeeded if (availableBytes >= bytesAmountNeeded) else -1
+        
+    
+
+# Fungsi untuk teknik lompat header
+# def find_spesific_index(headersList: List[int], i: int) -> int:
+#     """
+#     Mencari lokasi index start dari hasil random
+#     yang menghindari posisi header, 72 byte pertama, serta metadata
+    
+#     Asumsi: file sisip sudah pasti muat ke cover
+    
+#     Args: 
+#         headersList (List[int]): daftar index dari lokasi header
+#         i (int): index hasil random
+        
+#     Output:
+#         lokasi index start spesifik dari cover
+#     """
+#     with open(r"cover.txt", 'r') as fc:
+#         coverBytesLen = len(fc.readlines()) - 1 # -1 for extension line
+    
+#     idx = 0
+#     total = i + 72 + 1 # 72 untuk data stego file, 1 untuk start setelah 72
+#     flags = True
+#     while flags:
+#         if idx + 1 >= len(headersList):
+#             nextStop = coverBytesLen
+#         else:
+#             nextStop = headersList[idx + 1]
+            
+#         start = total + headersList[idx] + 3 # 3 untuk header
+#         if (start < nextStop):
+#             flags = False
+#         else:
+#             total -= (nextStop - headersList[idx] - 4)
+#             idx += 1
+            
+#     return start
+
+def find_spesific_index(firstHeader: int, stego_metadata: int, i: int) -> int:
+    """
+    Mencari lokasi index start dari hasil random
+    setelah posisi header pertama, metadata stego file, serta metadata
+    
+    Asumsi: file sisip sudah pasti muat ke cover
+    
+    Args: 
+        headersList (int): daftar index dari lokasi header
+        stego_metadata (int): panjang metadata stego file
+        i (int): index hasil random
+        
+    Output:
+        lokasi index start spesifik dari cover
+    """
+    if i < 0:
+        raise Exception("Index i tidak boleh negatif")
+    
+    return i + firstHeader + stego_metadata + 1
 
 # def find_audio_start(cover_bytes: list) -> int:
 #     """
@@ -53,7 +157,7 @@ def find_audio_start(cover_bytes: list) -> int:
 
 
 # ---------- Main functions ----------
-def sisip(use_random_start: bool, n_lsb: int = 1):
+def sisip(random_seed: str | None = None, n_lsb: int = 1):
     assert 1 <= n_lsb <= 4, "n_lsb must be between 1 and 4"
 
     cover_file = "cover.txt"
@@ -93,7 +197,7 @@ def sisip(use_random_start: bool, n_lsb: int = 1):
         raise ValueError("Extension string too long.")
     ext_size_bits = int_to_bits(ext_size, 8)
     options = 0
-    if use_random_start:
+    if random_seed is not None:
         options |= 0b00000010
     options_bits = int_to_bits(options, 8)
     content_size_bits_str = int_to_bits(content_size_bits, 32)
@@ -118,11 +222,11 @@ def sisip(use_random_start: bool, n_lsb: int = 1):
         usable_cover_bytes[i][-1] = bit
 
     # --- Payload start offset ---
-    if use_random_start:
-        seed_input = (secret_ext + str(content_size_bits)).encode("utf-8")
-        digest = hashlib.sha1(seed_input).digest()
-        seed_int = int.from_bytes(digest[:4], "big")
-        start_offset_bit = seed_int % total_payload_capacity
+    if random_seed is not None:
+        max_start = find_max_start_sisip(n_lsb, audio_start_idx, header_bytes_needed)
+        random_number = generate_random(random_seed, max_start)
+        
+        start_offset_bit = find_spesific_index(audio_start_idx, header_bytes_needed, random_number)
     else:
         start_offset_bit = 0
 
@@ -143,7 +247,7 @@ def sisip(use_random_start: bool, n_lsb: int = 1):
     print(f"✅ stega.txt written. Audio start at {audio_start_idx}. Embedded {content_size_bits} bits.")
 
 
-def ekstrak():
+def ekstrak(random_seed: str | None = None):
     stego_file = "stega.txt"
     output_file = "extracted.txt"
 
@@ -182,11 +286,11 @@ def ekstrak():
 
     # payload offset
     use_random_start = bool(options & 0b00000010)
-    if use_random_start:
-        seed_input = (ext_chars + str(content_size)).encode("utf-8")
-        digest = hashlib.sha1(seed_input).digest()
-        seed_int = int.from_bytes(digest[:4], "big")
-        start_offset_bit = seed_int % total_payload_capacity
+    if use_random_start and (random_seed is not None):
+        max_start = find_max_start_ekstrak(n_lsb, audio_start_idx, header_bits_total, content_size)
+        random_number = generate_random(random_seed, max_start)
+        
+        start_offset_bit = find_spesific_index(audio_start_idx, header_bits_total, random_number)
     else:
         start_offset_bit = 0
 
