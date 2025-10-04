@@ -2,6 +2,7 @@ from Sisip import *
 from PlaySong import *
 from FileProcessor import *
 from Vigenere import *
+from PSNR import *
 import os
 
 def sisip_pesan():
@@ -41,6 +42,7 @@ def sisip_pesan():
         os.remove('stega.txt')
     
         play_song(output_name)
+        calculate_psnr_mp3(cover_name, output_name)
     except Exception as e:
         print(f"Terjadi kesalahan: {e}")
 
@@ -69,7 +71,7 @@ def ekstrak_pesan():
 def main():
     loop = True
     while loop: 
-        fitur = input("Tentukan fitur yang ingin digunakan:\n1. Sisip Pesan\n2. Ekstrak Pesan\n3. Putar Lagu\nPilihan Anda: ")   
+        fitur = input("Tentukan fitur yang ingin digunakan:\n1. Sisip Pesan\n2. Ekstrak Pesan\n3. Putar Lagu\n4. PSNR\nPilihan Anda: ")   
         if fitur == '1':
             loop = False
             sisip_pesan()
@@ -81,6 +83,14 @@ def main():
             nama_lagu = input("Masukkan nama file audio (mp3): ")
             nama_lagu = os.path.join("sound", nama_lagu)
             play_song(nama_lagu)
+        elif fitur == '4' :
+            loop = False
+            original_name = input("Masukkan nama file audio asli (mp3): ")
+            stego_name = input("Masukkan nama file audio stego (mp3): ")
+            original_name = os.path.join("sound", original_name)
+            stego_name = os.path.join("sound", stego_name)
+
+            calculate_psnr_mp3(original_name, stego_name)
         else:
             print("\nPilihan tidak valid. Silakan coba lagi.")
     
