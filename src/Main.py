@@ -83,7 +83,7 @@ def main():
         elif fitur == '3':
             loop = False
             nama_lagu = input("Masukkan nama file audio (mp3): ")
-            nama_lagu = os.path.join("output", nama_lagu)
+            nama_lagu = os.path.join("sound", nama_lagu)
             play_song(nama_lagu)
         elif fitur == '4' :
             loop = False
