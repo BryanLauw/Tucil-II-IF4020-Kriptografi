@@ -21,7 +21,7 @@ def read_input(path: str, cover: bool, key: str | None = None):
         cover = False -> sisip.txt
     """
     if cover and not path.endswith('.mp3'):
-        raise Exception("File harus berekstensi mp3!")
+        raise Exception("File cover atau output harus berekstensi mp3!")
     
     key_idx = 0
     if not cover and key:
@@ -55,7 +55,7 @@ def read_input_stega(path: str):
         stega.txt
     """
     if not path.endswith('.mp3'):
-        raise Exception("File harus berekstensi mp3!")
+        raise Exception("File audio harus berekstensi mp3!")
     
     with open(path, 'rb') as f, open('stega.txt', 'w') as temp:
         temp.write(pathlib.Path(path).suffix + '\n')
@@ -79,7 +79,7 @@ def write_stega(fileName: str):
         stego-file disimpan di fileName
     """
     if (not fileName.endswith('.mp3')):
-        raise Exception("File harus berekstensi mp3!")
+        raise Exception("File stego-object berekstensi mp3!")
     
     # with open('cover.txt', 'r') as f, open(fileName, 'wb') as out:
     with open('stega.txt', 'r') as f, open(fileName, 'wb') as out:

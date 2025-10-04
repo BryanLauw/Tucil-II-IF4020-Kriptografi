@@ -5,10 +5,10 @@ def play_song(file_path: str):
         pygame.mixer.init()
         pygame.mixer.music.load(file_path)
         pygame.mixer.music.play()
-        print("Press Enter to stop playback...")
+        print("Tekan Enter untuk menghentikan pemutaran lagu...")
         input()
         pygame.mixer.music.stop()
     except Exception as e:
-        print(f"Error playing sound: {e}")
+        print(f"Terjadi kesalalahn: file tidak ditemukan")
 
 # play_song("sound/test.mp3")

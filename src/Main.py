@@ -16,8 +16,6 @@ def sisip_pesan():
     output_name = input("Masukkan path file output penyisipan pesan (mp3): ")
     output_name = os.path.join("output", output_name)
     
-    key = input("Masukkan kunci enkripsi (tekan enter untuk tanpa kunci): ")
-    
     loop = True
     while loop:
         n_lsb = int(input("Masukkan jumlah LSB yang digunakan (1, 2, 4): "))
@@ -28,11 +26,14 @@ def sisip_pesan():
         else:
             print("Jumlah LSB harus 1, 2, atau 4. Silakan coba lagi.")
             
+    key = input("Masukkan kunci enkripsi (tekan enter untuk tanpa kunci): ")
+            
     seed = input("Masukkan seed pembangkit acak (tekan enter untuk tanpa seed): ")
     
     try:
         read_input(cover_name, cover=True)
         read_input(secret_name, cover=False, key=key if key else None)
+        print("\nMenyisipkan berkas rahasia...")
         sisip(seed, n_lsb)
         write_stega(output_name)
         print(f"Pesan berhasil disisipkan ke dalam {output_name}")
@@ -58,6 +59,7 @@ def ekstrak_pesan():
     try:
         read_input_stega(stego_name)
         ekstrak(seed)
+        print("\nMengekstrak berkas rahasia...")
         read_write_secret(output_name, key if key else None)
         print(f"Pesan berhasil diekstrak ke dalam {output_name}")
         os.remove('stega.txt')
@@ -79,7 +81,7 @@ def main():
         elif fitur == '3':
             loop = False
             nama_lagu = input("Masukkan nama file audio (mp3): ")
-            nama_lagu = os.path.join("sound", nama_lagu)
+            nama_lagu = os.path.join("output", nama_lagu)
             play_song(nama_lagu)
         else:
             print("\nPilihan tidak valid. Silakan coba lagi.")

@@ -148,7 +148,6 @@ def find_audio_start(cover_bytes: list) -> int:
         for shift in range(8):
             candidate = combined[shift:shift + 11]
             if candidate == sync_word:
-                print()
                 return i + 4
     # Check last byte alone (if file is very short)
     if n > 0 and cover_bytes[-1].startswith(sync_word):
@@ -243,7 +242,6 @@ def sisip(random_seed: str | None = None, n_lsb: int = 1):
     with open(output_file, "w") as f:
         f.write("\n".join(stego_lines))
 
-    print(f"✅ stega.txt written. Audio start at {audio_start_idx}. Embedded {content_size_bits} bits.")
 
 
 def ekstrak(random_seed: str | None = None):
@@ -309,9 +307,6 @@ def ekstrak(random_seed: str | None = None):
         f.write(ext_chars + "\n")
         for bl in bit_lines:
             f.write(bl + "\n")
-
-    print(f"✅ Extracted {len(secret_bits)} bits. Extension: {ext_chars}. Audio start at {audio_start_idx}.")
-
 
 if __name__ == "__main__":
     print("start sisip")
