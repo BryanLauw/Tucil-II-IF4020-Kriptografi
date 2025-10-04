@@ -212,7 +212,7 @@ def sisip(random_seed: str | None = None, n_lsb: int = 1):
     available_bytes = total_usable_bytes - header_bytes_needed
     total_payload_capacity = available_bytes * n_lsb
     if content_size_bits > total_payload_capacity:
-        raise ValueError("Not enough capacity in audio samples.")
+        raise ValueError("Cover tidak cukup untuk berkas rahasia.")
 
     # --- Embed header ---
     for i in range(header_len_bits):
