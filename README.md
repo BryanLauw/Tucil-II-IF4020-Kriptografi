@@ -2,7 +2,7 @@
 
 ## Steganografi Audio MP3 dengan Multiple-LSB
 
-### 📖 Deskripsi
+### Deskripsi
 Proyek ini merupakan implementasi **Tugas Kecil II IF4020 Kriptografi (2025/2026-1)** dengan topik **Steganografi pada berkas audio menggunakan metode Multiple-LSB**.
 
 Program ini dapat:
@@ -10,11 +10,11 @@ Program ini dapat:
 - Mengekstrak kembali berkas rahasia dari audio stego.
 - Melakukan enkripsi pada berkas yang disisipkan dan dekripsi ketika mengambil berkas.
 - Memulai penyisipan dengan **seed** untuk random start.
-- (Bonus) Mengukur kualitas audio hasil stego dengan pendekatan **PSNR (Peak Signal-to-Noise Ratio)** untuk menilai perbedaan kualitas audio sebelum dan sesudah penyisipan.
+- Mengukur kualitas audio hasil stego dengan pendekatan **PSNR (Peak Signal-to-Noise Ratio)** untuk menilai perbedaan kualitas audio sebelum dan sesudah penyisipan.
 
 ---
 
-### 📂 Aturan Penempatan Berkas Sesuai Folder
+### Aturan Penempatan Berkas Sesuai Folder
 - **`sound/`** : berkas audio cover (input) dan audio hasil sisip (stego).
 - **`secret/`** : berkas rahasia yang ingin disembunyikan.
 - **`output/`** : berkas audio hasil proses penyisipan.
@@ -22,8 +22,8 @@ Program ini dapat:
 
 ---
 
-### ⚙️ Requirement
-Seluruh requirement Python dapat diunduh menggunakan file `requirements.txt`.  
+### Requirement
+Seluruh requirement Python 3.12 dapat diunduh menggunakan file `requirements.txt`.  
 Install dengan perintah berikut:
 ```bash
 pip install -r requirements.txt
@@ -31,7 +31,7 @@ pip install -r requirements.txt
 
 ---
 
-### 🛠️ Tech Stack & Dependency
+### Tech Stack & Dependency
 - **Python 3.10+**
 - **Standard Library**: `os`, `math`, dll.
 - **Tidak menggunakan library eksternal khusus audio** (proses MP3 dilakukan secara biner).
@@ -39,7 +39,7 @@ pip install -r requirements.txt
 
 ---
 
-### 🚀 Cara Menjalankan Program
+### Cara Menjalankan Program
 1. Pastikan semua berkas sudah ditempatkan sesuai struktur folder di atas.
 2. Jalankan program utama dari folder `src/` dengan perintah:
    ```bash
@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 ---
 
-### 📝 Catatan
+### Catatan
 - Pastikan nama dan lokasi berkas sesuai dengan spesifikasi folder agar program berjalan dengan baik.
 - Untuk proses penyisipan dan ekstraksi, ikuti instruksi yang muncul di terminal atau VS Code.
 
